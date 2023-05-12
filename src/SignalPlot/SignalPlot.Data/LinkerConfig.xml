@@ -1,0 +1,6 @@
+﻿<linker>
+	<assembly fullname="SignalPlot.Data">
+		<type fullname="SignalPlot.Data.Models.OverviewSensorLine" preserve="All" />
+	</assembly>
+
+</linker>

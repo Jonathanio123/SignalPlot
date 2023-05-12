@@ -1,0 +1,67 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-windows10.0.18362;net7.0</TargetFrameworks>
+		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<!-- Jonathan: Unsure what EnableMsixTooling does but it fixed a build error during dotnet test
+	https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/stable-channel#other-limitations-and-known-issues-1-->
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.18362'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230217.4" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.27" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.27" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.18362'">
+		<Content Include="Assets\**" />
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<EmbeddedResource Include="LinkerConfig.xml">
+			<LogicalName>$(AssemblyName).xml</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="BlankPage1.xaml" />
+		<None Remove="SignalMain.xaml" />
+		<None Remove="SignalOverview.xaml" />
+		<None Remove="Views\NotImplementedFlyout.xaml" />
+		<None Remove="Views\SignalsSelectorDialog.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Remove="BlankPage1.xaml" />
+		<UpToDateCheckInput Remove="SignalMain.xaml" />
+		<UpToDateCheckInput Remove="SignalOverview.xaml" />
+		<UpToDateCheckInput Remove="Views\NotImplementedFlyout.xaml" />
+		<UpToDateCheckInput Remove="Views\SignalsSelectorDialog.xaml" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows10.0.18362'">
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' != 'net7.0-windows10.0.18362'">
+		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+		<PackageReference Include="OneOf" Version="3.0.243" />
+		<PackageReference Include="ScottPlot" Version="5.0.2-beta" />
+		<PackageReference Include="ScottPlot.WinUI" Version="5.0.2-beta" />
+		<PackageReference Include="Uno.WinUI" Version="4.8.33" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SignalPlot.Data\SignalPlot.Data.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+</Project>

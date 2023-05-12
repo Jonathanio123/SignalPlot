@@ -1,0 +1,44 @@
+﻿<ContentDialog
+    x:Class="SignalPlot.Views.SignalsSelectorDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Select signals to view"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonText="Ok"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonText="Continue without filtering">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Header="Filter search to">
+                <ComboBoxItem IsSelected="True">All</ComboBoxItem>
+                <ComboBoxItem>Display Name</ComboBoxItem>
+                <ComboBoxItem>Signal Name</ComboBoxItem>
+            </ComboBox>
+
+            <TextBox Grid.Column="1" />
+
+            <Button Grid.Column="2" Content="Reset selection" />
+        </Grid>
+
+        <ListView
+            Grid.Row="1"
+            Width="1200"
+            Height="1200"
+            BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+            BorderThickness="1"
+            SelectionMode="Multiple"
+            ShowsScrollingPlaceholders="True" />
+    </Grid>
+</ContentDialog>

@@ -1,0 +1,4 @@
+﻿<linker>
+	<assembly fullname="ScottPlot" preserve="all" />
+
+</linker>

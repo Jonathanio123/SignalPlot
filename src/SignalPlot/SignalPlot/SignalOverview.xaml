@@ -1,0 +1,229 @@
+﻿<UserControl
+    x:Class="SignalPlot.SignalOverview"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:converters="using:SignalPlot.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:signalPlot="using:SignalPlot"
+    xmlns:views="using:SignalPlot.Views"
+    x:Name="SignalOverviewRoot"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:ColorToSolidColorBrushValueConverter x:Key="ColorToSolidColorBrush_ValueConverter" />
+        <!--
+            NoAnimationButtonStyle was written by ChatGtp 4. Is used to remove animations on the color picker button
+        -->
+        <Style
+            x:Key="NoAnimationButtonStyle"
+            BasedOn="{StaticResource DefaultButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTransitions="{TemplateBinding ContentTransitions}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Target="ContentPresenter.Background" Value="{TemplateBinding Background}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="ContentPresenter.Background" Value="{TemplateBinding Background}" />
+                                            <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonBorderBrushPointerOver}" />
+                                            <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPointerOver}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="ContentPresenter.Background" Value="{TemplateBinding Background}" />
+                                            <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonBorderBrushPressed}" />
+                                            <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPressed}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="ContentPresenter.Background" Value="{ThemeResource ButtonBackgroundDisabled}" />
+                                            <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonBorderBrushDisabled}" />
+                                            <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundDisabled}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.1*" />
+        </Grid.ColumnDefinitions>
+
+        <views:NotImplementedFlyout IsOpen="{x:Bind _vm.NotImplementedFlyoutIsOpen, Mode=TwoWay}" />
+
+        <controls:DataGrid
+            x:Name="SensorListView"
+            Grid.Column="0"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            CanUserSortColumns="False"
+            GridLinesVisibility="All"
+            ItemsSource="{x:Bind _vm.DataGridSensorLines, Mode=OneWay}"
+            KeyDown="SensorListView_OnKeyDown"
+            SelectionChanged="SensorListView_OnSelectionChanged"
+            SelectionMode="Extended">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn
+                    Width="SizeToCells"
+                    Binding="{Binding SensorLine.DisplayName}"
+                    Header="{x:Bind signalPlot:SignalOverview.DisplayNameHeader}"
+                    IsReadOnly="True" />
+                <controls:DataGridTemplateColumn Width="SizeToCells" Header="{x:Bind signalPlot:SignalOverview.VisibleHeader}">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding SignalVisible, Mode=TwoWay}" IsTabStop="False" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Width="SizeToCells" Header="{x:Bind signalPlot:SignalOverview.AxisHeader}">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                                Width="150"
+                                IsEnabled="{Binding IsAnalogue, Mode=OneTime}"
+                                SelectedItem="{Binding Yaxis, Mode=TwoWay}">
+
+                                <x:String>Primary</x:String>
+                                <x:String>Secondary</x:String>
+                                <x:String>Tertiary</x:String>
+                            </ComboBox>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTextColumn
+                    Width="SizeToCells"
+                    Binding="{Binding SensorLine.SignalName}"
+                    Header="{x:Bind signalPlot:SignalOverview.SignalNameHeader}"
+                    IsReadOnly="True" />
+                <controls:DataGridTextColumn
+                    Width="SizeToCells"
+                    Binding="{Binding SensorLine.Source}"
+                    Header="{x:Bind signalPlot:SignalOverview.SourceHeader}"
+                    IsReadOnly="True" />
+                <controls:DataGridTextColumn
+                    Width="SizeToCells"
+                    Binding="{Binding SensorLine.SignalType}"
+                    Header="{x:Bind signalPlot:SignalOverview.SignalTypeHeader}"
+                    IsReadOnly="True" />
+                <controls:DataGridTextColumn
+                    Width="SizeToCells"
+                    Binding="{Binding SensorLine.Unit}"
+                    Header="{x:Bind signalPlot:SignalOverview.UnitHeader}"
+                    IsReadOnly="True" />
+                <controls:DataGridTemplateColumn Width="SizeToHeader" Header="{x:Bind signalPlot:SignalOverview.ColorHeader}">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="{Binding Color, Mode=OneWay, Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}"
+                                CornerRadius="0"
+                                Foreground="{Binding Color, Mode=OneWay, Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}"
+                                Style="{StaticResource NoAnimationButtonStyle}">
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <StackPanel>
+                                            <ColorPicker
+                                                x:Name="ColorPicker"
+                                                ColorSpectrumShape="Box"
+                                                IsAlphaEnabled="True"
+                                                IsAlphaSliderVisible="False"
+                                                IsAlphaTextInputVisible="False"
+                                                IsColorChannelTextInputVisible="False"
+                                                IsColorSliderVisible="True"
+                                                IsHexInputVisible="True"
+                                                IsMoreButtonVisible="False"
+                                                Color="{Binding Color, Mode=TwoWay}" />
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Button
+                Grid.Row="0"
+                Height="{Binding ColumnHeaderHeight, ElementName=SensorListView}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderThickness="1,0,1,0"
+                Click="ResetGrid_OnClick"
+                Content="Reset grid layout"
+                CornerRadius="0" />
+            <Button
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Content="Search in grid"
+                Visibility="Visible">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="F" Modifiers="Control" />
+                </Button.KeyboardAccelerators>
+                <Button.Flyout>
+                    <Flyout Placement="Bottom">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <AutoSuggestBox
+                                Grid.Column="1"
+                                Width="150"
+                                PlaceholderText="{x:Bind SearchFlyout.PlaceHolderText, Mode=OneWay}"
+                                QuerySubmitted="AutoSuggestBox_OnQuerySubmitted"
+                                TextChanged="AutoSuggestBox_OnTextChanged" />
+                            <ComboBox
+                                Grid.Column="0"
+                                Margin="0,0,10,0"
+                                ItemsSource="{x:Bind SearchFlyout.ComboBoxSource}"
+                                SelectedItem="{x:Bind SearchFlyout.SelectedItem}"
+                                SelectionChanged="SearchByComboBox_OnSelectionChanged" />
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <Canvas Grid.Row="0" />
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "SampleApp.Windows": {
+      "commandName": "MsixPackage"
+    }
+  }
+}
