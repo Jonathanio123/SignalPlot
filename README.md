@@ -1,6 +1,9 @@
 SignalPlot | Process-signal GUI (“Oscilloscope”) based on the .NET /  UNO-platform 
 ============
 
+Written by [Jonathanio123](https://github.com/Jonathanio123) and [goran515](https://github.com/goran515)
+-----
+
 The component is meant to visualize live process-signals from the paint control system. This can be considered a multi-channel oscilloscope running on an App and/or in a browser.
 
 Target platforms: Windows 10/11 (WinUI) and Firefox/Chrome (WebAssembly)
