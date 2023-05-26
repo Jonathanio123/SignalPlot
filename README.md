@@ -9,8 +9,7 @@ The component is meant to visualize live process-signals from the paint control 
 
 Target platforms: Windows 10/11 (WinUI) and Firefox/Chrome (WebAssembly)
 
-[**Example csv logs can be found under CsvLogs/ folder**](https://github.com/Jonathanio123/SignalPlot/tree/main/CsvLogs) 💡
-
+[ScottPlot 5 is used as the plotting library](https://github.com/scottplot/scottplot)
 
 ## Downloading latest development release:
 When new commits are pushed to the main branch a new build is automatically created and published. These are kept for 90 days. Builds are published in release mode. 
