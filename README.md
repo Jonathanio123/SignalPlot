@@ -1,5 +1,6 @@
 SignalPlot | Process-signal GUI (“Oscilloscope”) based on the .NET /  UNO-platform 
 ============
+![image](https://github.com/Jonathanio123/SignalPlot/assets/73334350/40eef69d-d2b3-4d4b-90e5-d59762d7fad4)
 
 Written by [Jonathanio123](https://github.com/Jonathanio123) and [goran515](https://github.com/goran515)
 -----
